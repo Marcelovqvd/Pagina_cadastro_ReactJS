@@ -1,38 +1,28 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import api from '../../services/api';
-
-import { Container, List, Paragrafos } from './styles';
 
 export default class Usuarios extends Component {
   state = {
-    users: []
-  };
-  componentDidMount() {
-
-    api.get("/users").then(response => response.data)
-      .then((data) => {
-        this.setState({ users: data })
-        console.log(this.state.users)
-      })
+    users: [],
+  }
+  async componentDidMount() {
+    const response = await api.get('/users');
+    console.log(response.data);
+    this.setState({ users: response.data })
   }
 
+
   render() {
+    const { users } = this.state;
     return (
-      <Container>
-        {
-          this.state.users.map((user) => (
-            <List>
-              <li key={user}><Link to="/edicao">{user.name}</Link>
-                <Paragrafos>
-                  <p>email: {user.email}</p>
-                  <p>website: {user.website}</p>
-                </Paragrafos>
-              </li>
-            </List>
-          ))
-        }
-      </Container >
+      <>
+        <h1>Usuários</h1>
+        <ul>
+          {users.map(user => (
+            <li key={user.id}>{user.name}</li>
+          ))}
+        </ul>
+      </>
     );
   };
 }
